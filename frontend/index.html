@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DayBook — Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+
+    <!-- Logo -->
+    <div class="logo">
+      <h1>DayBook</h1>
+      <p>Your personal space for thoughts and tasks</p>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+      <button class="tab-btn active" onclick="showTab('login')">Login</button>
+      <button class="tab-btn" onclick="showTab('register')">Register</button>
+    </div>
+
+    <!-- Login form -->
+    <div id="login-tab" class="tab-content active">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="login()">Login</button>
+      <p id="login-error" class="error-msg"></p>
+    </div>
+
+    <!-- Register form -->
+    <div id="register-tab" class="tab-content">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="reg-name" placeholder="Shravan">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="register()">Create Account</button>
+      <p id="reg-error" class="error-msg"></p>
+      <p id="reg-success" class="success-msg"></p>
+    </div>
+
+  </div>
+
+  <script>
+    // Switch between login and register tabs
+    function showTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tab + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Register
+    async function register() {
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const errorEl = document.getElementById('reg-error');
+      const successEl = document.getElementById('reg-success');
+
+      errorEl.textContent = '';
+      successEl.textContent = '';
+
+      const res = await fetch('/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error;
+      } else {
+        successEl.textContent = 'Account created! Please login.';
+        showTab('login');
+      }
+    }
+
+    // Login
+    async function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+
+      errorEl.textContent = '';
+
+      const res = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error;
+      } else {
+        // Save token and name to localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name);
+        // Redirect to main app
+        window.location.href = '/app.html';
+      }
+    }
+
+    // If already logged in, skip to app
+    if (localStorage.getItem('token')) {
+      window.location.href = '/app.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DayBook</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <div class="app-header">
+      <h1>DayBook</h1>
+      <div class="header-right">
+        <span class="welcome-text" id="welcome-text"></span>
+        <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">☽</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Section tabs — Diary and Todo completely separate -->
+    <div class="section-tabs">
+      <button class="section-tab active" onclick="showSection('diary')">
+        📖 My Diary
+      </button>
+      <button class="section-tab" onclick="showSection('todos')">
+        ✏️ My Tasks
+      </button>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DIARY SECTION                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="diary-panel" class="page-panel active">
+
+      <div class="panel-header">
+        <span class="panel-title">My Journal</span>
+        <span class="date-stamp" id="diary-date"></span>
+      </div>
+
+      <!-- New diary entry form -->
+      <div class="new-entry-form">
+        <h3>~ New Entry ~</h3>
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="diary-title" placeholder="What's on your mind today?">
+        </div>
+
+        <div class="form-group">
+          <label>How are you feeling?</label>
+          <div class="mood-row">
+            <button class="mood-btn selected" data-mood="great" onclick="selectMood(this)">Great</button>
+            <button class="mood-btn" data-mood="good" onclick="selectMood(this)">Good</button>
+            <button class="mood-btn" data-mood="okay" onclick="selectMood(this)">Okay</button>
+            <button class="mood-btn" data-mood="bad" onclick="selectMood(this)">Bad</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Write your thoughts...</label>
+          <textarea id="diary-content" placeholder="Dear diary..."></textarea>
+        </div>
+
+        <button class="btn-primary" onclick="saveDiaryEntry()">Save Entry</button>
+        <p id="diary-error" class="error-msg"></p>
+      </div>
+
+      <!-- Diary entries list -->
+      <div class="entries-list" id="diary-list">
+        <div class="empty-state">Your diary is empty... start writing!</div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TODOS SECTION                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div id="todos-panel" class="page-panel">
+
+      <div class="panel-header">
+        <span class="panel-title">My Tasks</span>
+        <span class="date-stamp" id="todos-date"></span>
+      </div>
+
+      <!-- New todo form -->
+      <div class="new-entry-form">
+        <h3>~ New Task ~</h3>
+
+        <div class="form-group">
+          <label>Task</label>
+          <input type="text" id="todo-task" placeholder="What needs to be done?">
+        </div>
+
+        <div class="form-group">
+          <label>Priority</label>
+          <div class="priority-row">
+            <button class="priority-btn" data-p="high" onclick="selectPriority(this)">High</button>
+            <button class="priority-btn selected" data-p="medium" onclick="selectPriority(this)">Medium</button>
+            <button class="priority-btn" data-p="low" onclick="selectPriority(this)">Low</button>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="saveTodo()">Add Task</button>
+        <p id="todo-error" class="error-msg"></p>
+      </div>
+
+      <!-- Todos list -->
+      <div class="entries-list" id="todos-list">
+        <div class="empty-state">No tasks yet... add one above!</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
